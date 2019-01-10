@@ -23,9 +23,6 @@ func main() {
 	//router.NotFoundHandler = app.NotFoundHandler
 
 	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080" //localhost
-	}
 
 	fmt.Println(port)
 
