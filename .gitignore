@@ -1,0 +1,6 @@
+
+/v2/v1/
+/.idea/*
+/mongo_conf.json
+/server_conf.json
+/security_conf.json
