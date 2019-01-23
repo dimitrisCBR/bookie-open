@@ -11,10 +11,10 @@ type UserService struct {
 	collection *mgo.Collection
 }
 
-var CollectionName = "user"
+var collectionUser = "user"
 
 func NewUserService(session *mgo.Session) *UserService {
-	collection := session.DB(config.Configuration().MongoConfig.Dbname).C(CollectionName)
+	collection := session.DB(config.Configuration().MongoConfig.Dbname).C(collectionUser)
 	collection.EnsureIndex(userModelIndex())
 	return &UserService{collection}
 }

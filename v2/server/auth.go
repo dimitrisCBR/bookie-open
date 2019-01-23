@@ -44,13 +44,13 @@ func (a *authHelper) newToken(user model.User) string {
 
 func (a *authHelper) validate(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
-		cookie, err := req.Cookie("Auth")
-		if err != nil {
-			Error(res, http.StatusUnauthorized, "No authorization cookie")
+		header := req.Header.Get("Authorization")
+		if header == "" {
+			Error(res, http.StatusUnauthorized, "No authorization header")
 			return
 		}
 
-		token, err := jwt.ParseWithClaims(cookie.Value, &claims{}, func(token *jwt.Token) (interface{}, error) {
+		token, err := jwt.ParseWithClaims(header, &claims{}, func(token *jwt.Token) (interface{}, error) {
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, fmt.Errorf("Unexpected siging method")
 			}

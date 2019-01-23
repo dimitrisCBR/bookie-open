@@ -22,7 +22,8 @@ func (a *App) Initialize() {
 	}
 
 	u := mongodb.NewUserService(a.session.Copy())
-	a.server = server.NewServer(*u, config.Configuration())
+	as := mongodb.NewAppointmentService(a.session.Copy())
+	a.server = server.NewServer(*u,*as, config.Configuration())
 }
 
 func (a *App) Run() {

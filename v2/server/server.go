@@ -16,13 +16,14 @@ type Server struct {
 	config *config.ServerConfig
 }
 
-func NewServer(u mongodb.UserService, config config.Config) *Server {
+func NewServer(u mongodb.UserService, as mongodb.AppointmentService, config config.Config) *Server {
 	s := Server{
 		router: mux.NewRouter(),
 		config: &config.ServerConfig}
 
 	a := authHelper{config.AuthConfig.Secret}
 	NewUserRouter(u, s.getSubrouter("/user"), &a)
+	NewAppointmentRouter(as, u, s.getSubrouter("/appointment"), &a)
 	return &s
 }
 

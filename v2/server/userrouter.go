@@ -19,7 +19,7 @@ func NewUserRouter(u mongodb.UserService, router *mux.Router, a *authHelper) *mu
 	userRouter := userRouter{u, a}
 	router.HandleFunc("/register", userRouter.createUserHandler).Methods("POST")
 	router.HandleFunc("/profile", a.validate(userRouter.profileHandler)).Methods("GET")
-	router.HandleFunc("/{username}", userRouter.getUserHandler).Methods("GET")
+	router.HandleFunc("/{username}", a.validate(userRouter.getUserHandler)).Methods("GET")
 	router.HandleFunc("/login", userRouter.loginHandler).Methods("POST")
 	return router
 }
