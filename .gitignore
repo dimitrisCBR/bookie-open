@@ -4,3 +4,6 @@
 /mongo_conf.json
 /server_conf.json
 /security_conf.json
+!/server_conf.json
+!/security_conf.json
+!/mongo_conf.json

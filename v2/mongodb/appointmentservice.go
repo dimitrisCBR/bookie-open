@@ -1,8 +1,8 @@
 package mongodb
 
 import (
-	"dimitrisCBR/bookie-api/v2/config"
-	"dimitrisCBR/bookie-api/v2/model"
+	"dimitrisCBR/bookie-open/v2/config"
+	"dimitrisCBR/bookie-open/v2/model"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -33,6 +33,8 @@ func (as *AppointmentService) GetAppointmentsForUser(userId string) (error, []mo
 			Id:          dbAppointment.Id.Hex(),
 			Name:        dbAppointment.Name,
 			Description: dbAppointment.Description,
+			Fee:         dbAppointment.Fee,
+			Paid:        dbAppointment.Paid,
 			StartDate:   dbAppointment.StartDate,
 			EndDate:     dbAppointment.EndDate}
 	}

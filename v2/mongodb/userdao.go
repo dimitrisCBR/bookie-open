@@ -1,7 +1,7 @@
 package mongodb
 
 import (
-	"dimitrisCBR/bookie-api/v2/model"
+	"dimitrisCBR/bookie-open/v2/model"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/mgo.v2"

@@ -1,7 +1,7 @@
 package mongodb
 
 import (
-	"dimitrisCBR/bookie-api/v2/config"
+	"dimitrisCBR/bookie-open/v2/config"
 	"fmt"
 	"gopkg.in/mgo.v2"
 	"time"

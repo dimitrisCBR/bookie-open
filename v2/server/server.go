@@ -1,9 +1,8 @@
 package server
 
 import (
-	"dimitrisCBR/bookie-api/v2/config"
-	"dimitrisCBR/bookie-api/v2/mongodb"
-
+	"dimitrisCBR/bookie-open/v2/config"
+	"dimitrisCBR/bookie-open/v2/mongodb"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"log"

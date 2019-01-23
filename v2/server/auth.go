@@ -2,7 +2,7 @@ package server
 
 import (
 	"context"
-	"dimitrisCBR/bookie-api/v2/model"
+	"dimitrisCBR/bookie-open/v2/model"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"net/http"

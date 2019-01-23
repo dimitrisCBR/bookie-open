@@ -1,8 +1,8 @@
 package mongodb
 
 import (
-	"dimitrisCBR/bookie-api/v2/config"
-	"dimitrisCBR/bookie-api/v2/model"
+	"dimitrisCBR/bookie-open/v2/config"
+	"dimitrisCBR/bookie-open/v2/model"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )

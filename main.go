@@ -1,9 +1,9 @@
 package main
 
 import (
-	"dimitrisCBR/bookie-api/v2/config"
-	"dimitrisCBR/bookie-api/v2/mongodb"
-	"dimitrisCBR/bookie-api/v2/server"
+	"dimitrisCBR/bookie-open/v2/config"
+	"dimitrisCBR/bookie-open/v2/mongodb"
+	"dimitrisCBR/bookie-open/v2/server"
 	"fmt"
 	"log"
 )
@@ -23,7 +23,7 @@ func (a *App) Initialize() {
 
 	u := mongodb.NewUserService(a.session.Copy())
 	as := mongodb.NewAppointmentService(a.session.Copy())
-	a.server = server.NewServer(*u,*as, config.Configuration())
+	a.server = server.NewServer(*u, *as, config.Configuration())
 }
 
 func (a *App) Run() {

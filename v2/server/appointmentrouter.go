@@ -1,8 +1,8 @@
 package server
 
 import (
-	"dimitrisCBR/bookie-api/v2/model"
-	"dimitrisCBR/bookie-api/v2/mongodb"
+	"dimitrisCBR/bookie-open/v2/model"
+	"dimitrisCBR/bookie-open/v2/mongodb"
 	"encoding/json"
 	"errors"
 	"github.com/gorilla/mux"
