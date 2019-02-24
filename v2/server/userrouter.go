@@ -48,7 +48,7 @@ func (ur *userRouter) profileHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	username := claim.Username
 
-	err, user := ur.userService.GetUserByUsername(username)
+	err, user := ur.userService.GetUserByUsername(&username)
 	if err != nil {
 		Error(w, http.StatusNotFound, err.Error())
 		return
@@ -61,7 +61,7 @@ func (ur *userRouter) getUserHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	username := vars["username"]
 
-	err, user := ur.userService.GetUserByUsername(username)
+	err, user := ur.userService.GetUserByUsername(&username)
 	if err != nil {
 		Error(w, http.StatusNotFound, err.Error())
 		return

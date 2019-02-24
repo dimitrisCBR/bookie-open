@@ -23,7 +23,7 @@ func (as *AppointmentService) CreateAppointment(a *model.Appointment, u *model.U
 	return as.collection.Insert(appointment)
 }
 
-func (as *AppointmentService) GetAppointmentsForUser(userId string) (error, []model.Appointment) {
+func (as *AppointmentService) GetAppointmentsForUser(userId *string) (error, []model.Appointment) {
 	var dbResults []appointmentModel
 	err := as.collection.Find(bson.M{"userid": userId}).All(&dbResults)
 	modelResults := make([]model.Appointment, len(dbResults))
@@ -39,4 +39,31 @@ func (as *AppointmentService) GetAppointmentsForUser(userId string) (error, []mo
 			EndDate:     dbAppointment.EndDate}
 	}
 	return err, modelResults
+}
+
+func (as *AppointmentService) FindAppointmentById(userId string, apptId string) (error, model.Appointment) {
+	appModel := appointmentModel{}
+	err := as.collection.Find(bson.M{"userid": userId, "_id": bson.ObjectIdHex(apptId)}).One(&appModel)
+	return err, model.Appointment{
+		Id:          appModel.Id.Hex(),
+		Name:        appModel.Name,
+		Description: appModel.Description,
+		Fee:         appModel.Fee,
+		Paid:        appModel.Paid,
+		StartDate:   appModel.StartDate,
+		EndDate:     appModel.EndDate}
+}
+
+func (as *AppointmentService) DeleteAppointmentById(userId string, appointmentId string) error {
+	return as.collection.Remove(bson.M{"_id": bson.ObjectIdHex(appointmentId), "userid": userId})
+}
+
+func (as *AppointmentService) UpdateAppointment(updatedAppt *model.Appointment, userid string, ) error {
+	return as.collection.Update(bson.M{"userid": userid}, bson.M{"$set":bson.M{
+		"name":        updatedAppt.Name,
+		"description": updatedAppt.Description,
+		"fee":         updatedAppt.Fee,
+		"paid":        updatedAppt.Paid,
+		"startdate":   updatedAppt.StartDate,
+		"enddate":     updatedAppt.EndDate}})
 }

@@ -28,7 +28,7 @@ func (p *UserService) CreateUser(u *model.User) error {
 	return p.collection.Insert(&user)
 }
 
-func (p *UserService) GetUserByUsername(username string) (error, model.User) {
+func (p *UserService) GetUserByUsername(username *string) (error, model.User) {
 	usermodel := userModel{}
 	err := p.collection.Find(bson.M{"username": username}).One(&usermodel)
 	return err, model.User{

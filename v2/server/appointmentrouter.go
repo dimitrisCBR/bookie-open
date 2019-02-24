@@ -17,8 +17,10 @@ type appointmentRouter struct {
 
 func NewAppointmentRouter(as mongodb.AppointmentService, us mongodb.UserService, router *mux.Router, a *authHelper) *mux.Router {
 	appointmentRouter := appointmentRouter{as, us, a}
-	router.HandleFunc("/create", a.validate(appointmentRouter.createAppointmentHandler)).Methods("POST")
 	router.HandleFunc("/get", a.validate(appointmentRouter.getAppointmentsHandler)).Methods("GET")
+	router.HandleFunc("/create", a.validate(appointmentRouter.createAppointmentHandler)).Methods("POST")
+	router.HandleFunc("/update", a.validate(appointmentRouter.updateAppointmentHandler)).Methods("PUT")
+	router.HandleFunc("/delete", a.validate(appointmentRouter.deleteAppointmentHandler)).Methods("DELETE")
 	return router
 }
 
@@ -31,7 +33,7 @@ func (ar *appointmentRouter) createAppointmentHandler(w http.ResponseWriter, r *
 	}
 	username := claim.Username
 
-	err, user := ar.userService.GetUserByUsername(username)
+	err, user := ar.userService.GetUserByUsername(&username)
 	if err != nil {
 		Error(w, http.StatusNotFound, err.Error())
 		return
@@ -52,6 +54,67 @@ func (ar *appointmentRouter) createAppointmentHandler(w http.ResponseWriter, r *
 	Json(w, http.StatusOK, appointment)
 }
 
+func (ar *appointmentRouter) updateAppointmentHandler(w http.ResponseWriter, r *http.Request) {
+
+	claim, ok := r.Context().Value(contextKeyAuthtoken).(claims)
+	if !ok {
+		Error(w, http.StatusBadRequest, "no context")
+		return
+	}
+	username := claim.Username
+
+	err, user := ar.userService.GetUserByUsername(&username)
+	if err != nil {
+		Error(w, http.StatusNotFound, err.Error())
+		return
+	}
+
+	err, appointment := decodeAppointment(r)
+	if err != nil {
+		Error(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
+
+	err = ar.appointmentService.UpdateAppointment(&appointment, user.Id)
+	if err != nil {
+		Error(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	Json(w, http.StatusOK, appointment)
+}
+
+func (ar *appointmentRouter) deleteAppointmentHandler(w http.ResponseWriter, r *http.Request) {
+
+	claim, ok := r.Context().Value(contextKeyAuthtoken).(claims)
+	if !ok {
+		Error(w, http.StatusBadRequest, "no context")
+		return
+	}
+	username := claim.Username
+
+	err, user := ar.userService.GetUserByUsername(&username)
+	if err != nil {
+		Error(w, http.StatusNotFound, err.Error())
+		return
+	}
+
+	appId := r.URL.Query().Get("id")
+	err, appointment := ar.appointmentService.FindAppointmentById(user.Id, appId)
+	if err != nil {
+		Error(w, http.StatusBadRequest, "Invalid appointment Id")
+		return
+	}
+
+	err = ar.appointmentService.DeleteAppointmentById(user.Id, appId)
+	if err != nil {
+		Error(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	Json(w, http.StatusOK, nil)
+}
+
 func (ar *appointmentRouter) getAppointmentsHandler(w http.ResponseWriter, r *http.Request) {
 
 	claim, ok := r.Context().Value(contextKeyAuthtoken).(claims)
@@ -62,13 +125,13 @@ func (ar *appointmentRouter) getAppointmentsHandler(w http.ResponseWriter, r *ht
 
 	username := claim.Username
 
-	err, user := ar.userService.GetUserByUsername(username)
+	err, user := ar.userService.GetUserByUsername(&username)
 	if err != nil {
 		Error(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	err, appointments := ar.appointmentService.GetAppointmentsForUser(user.Id)
+	err, appointments := ar.appointmentService.GetAppointmentsForUser(&user.Id)
 	if err != nil {
 		Error(w, http.StatusInternalServerError, err.Error())
 		return
