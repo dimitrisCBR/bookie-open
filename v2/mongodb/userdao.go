@@ -8,14 +8,14 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-type userModel struct {
+type userDao struct {
 	Id           bson.ObjectId `bson:"_id,omitempty"`
 	Username     string
 	PasswordHash string
 	Salt         string
 }
 
-func userModelIndex() mgo.Index {
+func userDaoIndex() mgo.Index {
 	return mgo.Index{
 		Key:        []string{"username"},
 		Unique:     true,
@@ -25,20 +25,20 @@ func userModelIndex() mgo.Index {
 	}
 }
 
-func newUserModel(u *model.User) (*userModel, error) {
-	user := userModel{Username: u.Username}
+func newUser(u *model.User) (*userDao, error) {
+	user := userDao{Username: u.Username}
 	err := user.setSaltedPassword(u.Password)
 	return &user, err
 }
 
-func (u *userModel) comparePassword(password string) error {
+func (u *userDao) comparePassword(password string) error {
 	incoming := []byte(password + u.Salt)
 	existing := []byte(u.PasswordHash)
 	err := bcrypt.CompareHashAndPassword(existing, incoming)
 	return err
 }
 
-func (u *userModel) setSaltedPassword(password string) error {
+func (u *userDao) setSaltedPassword(password string) error {
 	salt := uuid.New().String()
 	passwordBytes := []byte(password + salt)
 	hash, err := bcrypt.GenerateFromPassword(passwordBytes, bcrypt.DefaultCost)

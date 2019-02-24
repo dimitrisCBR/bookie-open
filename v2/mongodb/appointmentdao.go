@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-type appointmentModel struct {
+type appointmentDao struct {
 	Id          bson.ObjectId `bson:"_id,omitempty"`
 	UserId      string
 	Name        string
@@ -17,8 +17,8 @@ type appointmentModel struct {
 	EndDate     time.Time
 }
 
-func newAppointmentModel(a *model.Appointment, u *model.User) *appointmentModel {
-	appointment := appointmentModel{
+func newAppointmentDao(a *model.Appointment, u *model.User) *appointmentDao {
+	appointment := appointmentDao{
 		UserId:      u.Id,
 		Name:        a.Name,
 		Description: a.Description,

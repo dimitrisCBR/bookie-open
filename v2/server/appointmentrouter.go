@@ -100,7 +100,7 @@ func (ar *appointmentRouter) deleteAppointmentHandler(w http.ResponseWriter, r *
 	}
 
 	appId := r.URL.Query().Get("id")
-	err, appointment := ar.appointmentService.FindAppointmentById(user.Id, appId)
+	err, _ = ar.appointmentService.FindAppointmentById(user.Id, appId)
 	if err != nil {
 		Error(w, http.StatusBadRequest, "Invalid appointment Id")
 		return

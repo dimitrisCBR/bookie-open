@@ -15,12 +15,12 @@ var collectionUser = "user"
 
 func NewUserService(session *mgo.Session) *UserService {
 	collection := session.DB(config.Configuration().MongoConfig.Dbname).C(collectionUser)
-	collection.EnsureIndex(userModelIndex())
+	collection.EnsureIndex(userDaoIndex())
 	return &UserService{collection}
 }
 
 func (p *UserService) CreateUser(u *model.User) error {
-	user, err := newUserModel(u)
+	user, err := newUser(u)
 	if err != nil {
 		return err
 	}
@@ -29,7 +29,7 @@ func (p *UserService) CreateUser(u *model.User) error {
 }
 
 func (p *UserService) GetUserByUsername(username *string) (error, model.User) {
-	usermodel := userModel{}
+	usermodel := userDao{}
 	err := p.collection.Find(bson.M{"username": username}).One(&usermodel)
 	return err, model.User{
 		Id:       usermodel.Id.Hex(),
@@ -38,7 +38,7 @@ func (p *UserService) GetUserByUsername(username *string) (error, model.User) {
 }
 
 func (p *UserService) Login(c model.Credentials) (error, model.User) {
-	usermodel := userModel{}
+	usermodel := userDao{}
 	err := p.collection.Find(bson.M{"username": c.Username}).One(&usermodel)
 
 	err = usermodel.comparePassword(c.Password)

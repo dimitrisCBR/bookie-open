@@ -19,12 +19,12 @@ func NewAppointmentService(session *mgo.Session) *AppointmentService {
 }
 
 func (as *AppointmentService) CreateAppointment(a *model.Appointment, u *model.User) error {
-	appointment := newAppointmentModel(a, u)
+	appointment := newAppointmentDao(a, u)
 	return as.collection.Insert(appointment)
 }
 
 func (as *AppointmentService) GetAppointmentsForUser(userId *string) (error, []model.Appointment) {
-	var dbResults []appointmentModel
+	var dbResults []appointmentDao
 	err := as.collection.Find(bson.M{"userid": userId}).All(&dbResults)
 	modelResults := make([]model.Appointment, len(dbResults))
 	for i := 0; i <= len(dbResults)-1; i++ {
@@ -42,7 +42,7 @@ func (as *AppointmentService) GetAppointmentsForUser(userId *string) (error, []m
 }
 
 func (as *AppointmentService) FindAppointmentById(userId string, apptId string) (error, model.Appointment) {
-	appModel := appointmentModel{}
+	appModel := appointmentDao{}
 	err := as.collection.Find(bson.M{"userid": userId, "_id": bson.ObjectIdHex(apptId)}).One(&appModel)
 	return err, model.Appointment{
 		Id:          appModel.Id.Hex(),

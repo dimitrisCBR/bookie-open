@@ -11,9 +11,3 @@ type Appointment struct {
 	StartDate   time.Time `json:"start"`
 	EndDate     time.Time `json:"end"`
 }
-
-type AppointmentService interface {
-	CreateAppointment(a *Appointment) error
-	GetAppointmentBy(username string) (error, User)
-	Login(c Credentials) (error, User)
-}
